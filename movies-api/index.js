@@ -5,6 +5,7 @@ import './db';
 import cors from 'cors';
 import usersRouter from './api/users';
 import authenticate from './authenticate';
+import moviesRouter from './api/movies';   
 
 dotenv.config();
 
@@ -25,7 +26,7 @@ const errHandler = (err, req, res, next) => {
 app.use(express.json());
 app.use(cors());
 app.use('/api/users', usersRouter);
-
+app.use('/api/movies', moviesRouter); 
 app.listen(port, () => {
   console.info(`Server running at ${port}`);
 });
