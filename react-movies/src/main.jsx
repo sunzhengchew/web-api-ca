@@ -3,6 +3,8 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Navigate, Routes } from "react-router";
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import StartPage from "./pages/startPage";
+import SignupPage from "./pages/signupPage";
 import HomePage from "./pages/homePage";
 import MoviePage from "./pages/movieDetailsPage";
 import PlaylistMoviesPage from "./pages/playlistPage";
@@ -60,11 +62,13 @@ const App = () => {
         <SiteHeader />
         <MoviesContextProvider>
           <Routes>
+            <Route path="/" element={< StartPage />} />
+            <Route path="/signup" element={< SignupPage />} />
             <Route path="/movies/favorites" element={<FavoriteMoviesPage />} />
             <Route path="/reviews/:id" element={<MovieReviewPage />} />
             <Route path="/reviews/form" element={<AddMovieReviewPage />} />
             <Route path="/movies/:id" element={<MoviePage />} />
-            <Route path="/" element={<HomePage />} />
+            <Route path="/movies/home" element={<HomePage />} />
             <Route path="*" element={<Navigate to="/" />} />
             <Route path="/movies/trending/today" element={<TrendingPage />} />
             <Route path="/movies/top-rated" element={<TopRatePage />} />
