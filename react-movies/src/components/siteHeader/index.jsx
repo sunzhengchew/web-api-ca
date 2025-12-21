@@ -1,17 +1,14 @@
-import React, { useState } from "react";
+import { useState, useContext } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
-import MenuIcon from "@mui/icons-material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
 import { useNavigate } from "react-router";
 import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import MovieCreationTwoToneIcon from "@mui/icons-material/MovieCreationTwoTone";
 import Box from "@mui/material/Box";
+import { AuthContext } from "../../contexts/authContext";
 
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
@@ -22,6 +19,8 @@ const SiteHeader = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
+
+  const { isAuthenticated, userName, signout } = useContext(AuthContext);
 
   const menuOptions = [
     { label: "Home", path: "/movies/home" },
@@ -38,8 +37,9 @@ const SiteHeader = () => {
     navigate(pageURL);
   };
 
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleSignOut = () => {
+    signout();
+    navigate("/"); // back to login/start page
   };
 
   return (
@@ -78,8 +78,16 @@ const SiteHeader = () => {
             >
               TMDB Client
             </Typography>
-          </Box>{(
+          </Box>
+
+          {isAuthenticated ? (
             <Box sx={{ display: "flex", gap: 2 }}>
+              <Typography
+                variant="body1"
+                sx={{ color: "yellow", fontWeight: "bold", alignSelf: "center" }}>
+                Hi! <strong>{userName}</strong>
+              </Typography>
+
               {menuOptions.map((opt) => (
                 <Button
                   key={opt.label}
@@ -88,10 +96,7 @@ const SiteHeader = () => {
                   sx={{
                     color: "primary.main",
                     fontWeight: "bold",
-                    "&:hover": {
-                      color: "white",
-                      backgroundColor: "rgba(255,179,0,0.1)",
-                    },
+                    "&:hover": { color: "white", backgroundColor: "rgba(255,179,0,0.1)" },
                     borderRadius: "20px",
                     px: 2,
                   }}
@@ -99,8 +104,29 @@ const SiteHeader = () => {
                   {opt.label}
                 </Button>
               ))}
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={handleSignOut}
+                sx={{
+                  borderRadius: "20px",
+                  ml: 1,
+                  fontWeight: "bold",
+                }}
+              >
+                Sign Out
+              </Button>
             </Box>
+          ) : (
+            <Typography
+              variant="body1"
+              sx={{ color: "yellow", fontWeight: "bold", cursor: "pointer" }}
+              onClick={() => navigate("/")}
+            >
+              Sign In To Explore The Website
+            </Typography>
           )}
+
         </Toolbar>
       </AppBar>
       <Offset />
